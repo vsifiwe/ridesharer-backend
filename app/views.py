@@ -1,5 +1,11 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import pusher
+import json
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 from app.models import Account, Route
 
@@ -50,9 +56,22 @@ def search_routes(request):
     }
     return Response(response)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def pusher_auth(request):
-    return Response({"message": "pusher auth"})
+    app_id = os.environ.get('PUSHER_APP_ID')
+    app_key = os.environ.get('PUSHER_APP_KEY')
+    app_secret = os.environ.get('PUSHER_APP_SECRET')
+    app_cluster = os.environ.get('PUSHER_APP_CLUSTER')
+    
+    pusher_client = pusher.Pusher(app_id=app_id, key=app_key, secret=app_secret, cluster=app_cluster)    
+
+    auth = pusher_client.authenticate(
+    channel=request.data.get('channel_name'),
+    socket_id=request.data.get('socket_id')
+    )
+    response = json.dumps(auth)
+
+    return Response(response)
 
 @api_view(['GET'])
 def delete_index(request):
