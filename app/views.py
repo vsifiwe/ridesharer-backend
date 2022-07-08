@@ -64,7 +64,8 @@ def pusher_auth(request):
     app_cluster = os.environ.get('PUSHER_APP_CLUSTER')
     
     pusher_client = pusher.Pusher(app_id=app_id, key=app_key, secret=app_secret, cluster=app_cluster)    
-
+    print("channel_name", request.data.get('channel_name'))
+    print("socket_id", request.data.get('socket_id'))
     auth = pusher_client.authenticate(
     channel=request.data.get('channel_name'),
     socket_id=request.data.get('socket_id')
