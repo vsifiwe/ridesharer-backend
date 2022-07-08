@@ -70,9 +70,8 @@ def pusher_auth(request):
     channel=request.data.get('channel_name'),
     socket_id=request.data.get('socket_id')
     )
-    response = json.dumps(auth)
 
-    return Response(response)
+    return Response(auth)
 
 @api_view(['GET'])
 def delete_index(request):
